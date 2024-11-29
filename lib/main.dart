@@ -27,6 +27,9 @@ class RecipeBook extends StatelessWidget{
         appBar: AppBar(
           backgroundColor: Colors.red[900],
           bottom: const TabBar(
+            indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.black54,
             tabs: [
               Tab(icon: Icon(Icons.home), text: 'Home'),
               Tab(icon: Icon(Icons.search), text: 'Search')
