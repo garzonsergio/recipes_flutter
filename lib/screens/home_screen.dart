@@ -1,10 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:recipes_flutter/screens/recipe_detail.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  Future<List<dynamic>> FetchRecipes() async{
+    final url = Uri.parse('http://localhost:12347/recipes');
+    final response = await http.get(url);
+    final data = jsonDecode(response.body);
+    return data['recipes'];
+  }
+
   @override
   Widget build(BuildContext context) {
+    FetchRecipes();
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.red[900],
@@ -37,47 +49,54 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _RecipesCard(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        width: MediaQuery.of(context)
-            .size
-            .width, //Media query to set the width of the container to the width of the screen
-        height: 125,
-        child: Card(
-            child: Row(children: <Widget>[
-          SizedBox(
-            height: 125,
-            width: 100,
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                    'https://cloudfront-us-east-1.images.arcpublishing.com/elespectador/JLYGWDUSXFDI7ITQECOXNAG674.jpg',
-                    fit: BoxFit.cover)),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                // Is possible to use a column to organize the widgets vertically
-                const Text("Recipe name",
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context, 
+            MaterialPageRoute(builder: (context) => RecipeDetail(recipeName: 'Sushi')));
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: MediaQuery.of(context)
+              .size
+              .width, //Media query to set the width of the container to the width of the screen
+          height: 125,
+          child: Card(
+              child: Row(children: <Widget>[
+            SizedBox(
+              height: 125,
+              width: 100,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                      'https://cloudfront-us-east-1.images.arcpublishing.com/elespectador/JLYGWDUSXFDI7ITQECOXNAG674.jpg',
+                      fit: BoxFit.cover)),
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  // Is possible to use a column to organize the widgets vertically
+                  const Text("Recipe name",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Quicksand')),
+                  Container(height: 2, width: 125, color: Colors.amber[700]),
+                  const Text(
+                    "Author",
                     style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Quicksand')),
-                Container(height: 2, width: 125, color: Colors.amber[700]),
-                const Text(
-                  "Author",
-                  style: TextStyle(
-                    fontSize: 12,
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-              ])
-        ])),
+                  const SizedBox(height: 4),
+                ])
+          ])),
+        ),
       ),
     );
   }
