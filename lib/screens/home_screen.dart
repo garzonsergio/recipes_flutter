@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<List<dynamic>> FetchRecipes() async{
+  Future<List<dynamic>> FetchRecipes() async {
     final url = Uri.parse('http://localhost:12347/recipes');
     final response = await http.get(url);
     final data = jsonDecode(response.body);
@@ -16,7 +16,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FetchRecipes();
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.red[900],
@@ -28,13 +27,16 @@ class HomeScreen extends StatelessWidget {
             _showBottom(context);
           },
         ),
-        body: Column(
-          children: <Widget>[
-            _RecipesCard(context),
-            _RecipesCard(context),
-            _RecipesCard(context),
-          ],
-        ));
+        body: FutureBuilder(
+            future: FetchRecipes(),
+            builder: (context, snapshot) {
+              final recipes = snapshot.data;
+              return ListView.builder(
+                  itemCount: recipes!.length,
+                  itemBuilder: (context, index) {
+                    return _RecipesCard(context, recipes[index]);
+                  });
+            }));
   }
 
   Future<void> _showBottom(BuildContext context) {
@@ -48,12 +50,14 @@ class HomeScreen extends StatelessWidget {
             ));
   }
 
-  Widget _RecipesCard(BuildContext context) {
+  Widget _RecipesCard(BuildContext context, dynamic recipe) {
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (context) => RecipeDetail(recipeName: 'Sushi')));
+            context,
+            MaterialPageRoute(
+                builder: (context) => RecipeDetail(recipeName: recipe['name'])));
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -70,7 +74,7 @@ class HomeScreen extends StatelessWidget {
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: Image.network(
-                      'https://cloudfront-us-east-1.images.arcpublishing.com/elespectador/JLYGWDUSXFDI7ITQECOXNAG674.jpg',
+                      recipe['image_link'],
                       fit: BoxFit.cover)),
             ),
             const SizedBox(
@@ -81,15 +85,15 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   // Is possible to use a column to organize the widgets vertically
-                  const Text("Recipe name",
+                  Text(recipe['name'],
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Quicksand')),
                   Container(height: 2, width: 125, color: Colors.amber[700]),
-                  const Text(
-                    "Author",
-                    style: TextStyle(
+                  Text(
+                    recipe['author'],
+                    style: const TextStyle(
                       fontSize: 12,
                     ),
                   ),
