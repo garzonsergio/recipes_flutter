@@ -8,7 +8,10 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   Future<List<dynamic>> FetchRecipes() async {
-    final url = Uri.parse('http://localhost:12347/recipes');
+    //Android 10.0.2.2
+    //IOS 127.0.0.1
+    //Web localhost
+    final url = Uri.parse('http://10.0.2.2:12347/recipes');
     final response = await http.get(url);
     final data = jsonDecode(response.body);
     return data['recipes'];
@@ -27,10 +30,10 @@ class HomeScreen extends StatelessWidget {
             _showBottom(context);
           },
         ),
-        body: FutureBuilder(
+        body: FutureBuilder<List<dynamic>>(
             future: FetchRecipes(),
             builder: (context, snapshot) {
-              final recipes = snapshot.data;
+              final recipes = snapshot.data ?? [];
               return ListView.builder(
                   itemCount: recipes!.length,
                   itemBuilder: (context, index) {
@@ -51,13 +54,13 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _RecipesCard(BuildContext context, dynamic recipe) {
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => RecipeDetail(recipeName: recipe['name'])));
+                builder: (context) =>
+                    RecipeDetail(recipeName: recipe['name'])));
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -73,9 +76,8 @@ class HomeScreen extends StatelessWidget {
               width: 100,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                      recipe['image_link'],
-                      fit: BoxFit.cover)),
+                  child:
+                      Image.network(recipe['image_link'], fit: BoxFit.cover)),
             ),
             const SizedBox(
               width: 20,
