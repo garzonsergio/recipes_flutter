@@ -39,7 +39,7 @@ class RecipeBook extends StatelessWidget {
             unselectedLabelColor: Colors.black54,
             tabs: [
               Tab(icon: Icon(Icons.home), text: 'Home'),
-              Tab(icon: Icon(Icons.search), text: 'Search')
+              Tab(icon: Icon(Icons.favorite), text: 'Favorites'),
             ],
           ),
           title: const Text(

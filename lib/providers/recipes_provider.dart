@@ -5,7 +5,8 @@ import 'package:recipes_flutter/models/recipe_model.dart';
 
 class RecipesProvider extends ChangeNotifier {
   bool isLoading = false;
-  List<Recipe> recipes = [];
+  
+  List<Recipe> recipes = []; //State that saves the recipes
 
   Future<void> fetchRecipes() async {
     //Android 10.0.2.2
