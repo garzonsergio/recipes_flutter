@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:recipes_flutter/providers/recipes_provider.dart';
 import 'package:recipes_flutter/screens/home_screen.dart';
 
 void main() => runApp(const MyApp());
@@ -8,15 +10,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'First commit',
-      home: RecipeBook(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => RecipesProvider()),
+      ],
+      child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'First commit',
+        home: RecipeBook(),
+      ),
     );
   }
 }
 
-class RecipeBook extends StatelessWidget{
+class RecipeBook extends StatelessWidget {
   const RecipeBook({super.key});
 
   @override
@@ -43,6 +50,8 @@ class RecipeBook extends StatelessWidget{
         body: const TabBarView(
           children: [
             HomeScreen(),
+            
+            // Add another screen or remove the second tab
           ],
         ),
       ),

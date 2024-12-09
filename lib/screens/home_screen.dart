@@ -1,34 +1,17 @@
-import 'dart:convert';
-
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:recipes_flutter/providers/recipes_provider.dart';
 import 'package:recipes_flutter/screens/recipe_detail.dart';
-import 'package:http/http.dart' as http;
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  Future<List<dynamic>> FetchRecipes() async {
-    //Android 10.0.2.2
-    //IOS 127.0.0.1
-    //Web localhost
-    final url = Uri.parse('http://10.0.2.2:12347/recipes');
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return data['recipes'];
-      } else {
-        print('Error: ${response.statusCode}');
-        return [];
-      }
-    } catch (e) {
-      print('Error in request');
-      return [];
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final recipesProvider = Provider.of<RecipesProvider>(context, listen: false);
+    recipesProvider.fetchRecipes();
+
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.red[900],
@@ -40,22 +23,19 @@ class HomeScreen extends StatelessWidget {
             _showBottom(context);
           },
         ),
-        body: FutureBuilder<List<dynamic>>(
-            future: FetchRecipes(),
-            builder: (context, snapshot) {
-              final recipes = snapshot.data ?? [];
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('No recipes found'));
-              } else {
-                return ListView.builder(
-                    itemCount: recipes!.length,
-                    itemBuilder: (context, index) {
-                      return _RecipesCard(context, recipes[index]);
-                    });
-              }
-            }));
+        body: Consumer<RecipesProvider>(builder: (context, provider, child) {
+          if (provider.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (provider.recipes.isEmpty) {
+            return const Center(child: Text('No recipes found'));
+          } else {
+            return ListView.builder(
+                itemCount: provider.recipes.length,
+                itemBuilder: (context, index) {
+                  return _RecipesCard(context, provider.recipes[index]);
+                });
+          }
+        }));
   }
 
   Future<void> _showBottom(BuildContext context) {
@@ -76,7 +56,7 @@ class HomeScreen extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    RecipeDetail(recipeName: recipe['name'])));
+                    RecipeDetail(recipeName: recipe.name)));
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -93,7 +73,7 @@ class HomeScreen extends StatelessWidget {
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child:
-                      Image.network(recipe['image_link'], fit: BoxFit.cover)),
+                      Image.network(recipe.imageLink, fit: BoxFit.cover)), // Change image_link to imageLink
             ),
             const SizedBox(
               width: 20,
@@ -103,14 +83,14 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   // Is possible to use a column to organize the widgets vertically
-                  Text(recipe['name'],
+                  Text(recipe.name,
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Quicksand')),
                   Container(height: 2, width: 125, color: Colors.amber[700]),
                   Text(
-                    recipe['author'],
+                    'By ${recipe.author}',
                     style: const TextStyle(
                       fontSize: 12,
                     ),
