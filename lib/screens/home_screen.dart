@@ -56,7 +56,7 @@ class HomeScreen extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    RecipeDetail(recipeName: recipe.name)));
+                    RecipeDetail(recipesData: recipe)));
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
