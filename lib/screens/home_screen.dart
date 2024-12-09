@@ -12,9 +12,19 @@ class HomeScreen extends StatelessWidget {
     //IOS 127.0.0.1
     //Web localhost
     final url = Uri.parse('http://10.0.2.2:12347/recipes');
-    final response = await http.get(url);
-    final data = jsonDecode(response.body);
-    return data['recipes'];
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['recipes'];
+      } else {
+        print('Error: ${response.statusCode}');
+        return [];
+      }
+    } catch (e) {
+      print('Error in request');
+      return [];
+    }
   }
 
   @override
