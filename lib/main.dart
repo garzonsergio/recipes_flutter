@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recipes_flutter/providers/recipes_provider.dart';
+import 'package:recipes_flutter/screens/favorites_screen.dart';
 import 'package:recipes_flutter/screens/home_screen.dart';
 
 void main() => runApp(const MyApp());
@@ -50,7 +51,7 @@ class RecipeBook extends StatelessWidget {
         body: const TabBarView(
           children: [
             HomeScreen(),
-            
+            FavoritesScreen(),
             // Add another screen or remove the second tab
           ],
         ),
