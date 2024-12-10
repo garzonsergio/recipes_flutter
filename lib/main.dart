@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:recipes_flutter/providers/recipes_provider.dart';
 import 'package:recipes_flutter/screens/favorites_screen.dart';
 import 'package:recipes_flutter/screens/home_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 void main() => runApp(const MyApp());
 
@@ -16,6 +19,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => RecipesProvider()),
       ],
       child: const MaterialApp(
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+        ],
         debugShowCheckedModeBanner: false,
         title: 'First commit',
         home: RecipeBook(),

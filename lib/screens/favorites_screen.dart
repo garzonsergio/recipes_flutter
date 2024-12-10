@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:recipes_flutter/models/recipe_model.dart';
 import 'package:recipes_flutter/providers/recipes_provider.dart';
 import 'package:recipes_flutter/screens/recipe_detail.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -21,7 +23,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           final favoritesRecipes = recipeProvider.favoriteRecipe;
 
           return favoritesRecipes.isEmpty
-              ? Center(child: Text('No favorites found'))
+              ? Center(child: Text(AppLocalizations.of(context)!.noRecipes))
               : ListView.builder(
                   itemCount: favoritesRecipes.length,
                   itemBuilder: (context, index) {
