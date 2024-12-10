@@ -45,7 +45,18 @@ class _RecipeDetailState extends State<RecipeDetail> {
                 },
                 icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border))
           ]),
+      body: Padding(
+          padding: EdgeInsets.all(18.0),
+          child: Column(children: [
+            Image.network(widget.recipesData.imageLink),
+            SizedBox(height: 8),
+            Text(widget.recipesData.name),
+            SizedBox(height: 8),
+            Text(widget.recipesData.author),
+            SizedBox(height: 8),
+            Text("Recipe Steps"),
+            for (var step in widget.recipesData.recipeSteps) Text("- $step")
+          ])),
     );
   }
 }
-
