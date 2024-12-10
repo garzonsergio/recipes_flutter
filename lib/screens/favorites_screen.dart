@@ -47,13 +47,17 @@ class favoriteRecipesCard extends StatelessWidget {
               MaterialPageRoute(
                   builder: (context) => RecipeDetail(recipesData: recipe)));
         },
-        child: Card(
-            child: Column(
-          children: [
-            // Image.network(recipe.imageLink),
-            Text(recipe.name),
-            Text(recipe.author)
-          ],
-        )));
+        child: Semantics(
+          label:'Recipe Card',
+          hint:'Tap to view recipe details',
+          child: Card(
+              child: Column(
+            children: [
+              // Image.network(recipe.imageLink),
+              Text(recipe.name),
+              Text(recipe.author)
+            ],
+          )),
+        ));
   }
 }
